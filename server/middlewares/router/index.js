@@ -62,9 +62,10 @@ router.get('/leaves', function (req, res) {
 });
 
 router.get('/createSVGImage', function (req, res) {
-	madge.then((res) => res.image('images/image-'+ timestamp +'.svg'))
+	madge.then((results) => results.image('images/image-'+ timestamp +'.svg'))
 	.then((writtenImagePath) => {
 		console.log('Image written to ' + writtenImagePath);
+		res.json({path: writtenImagePath});
 	});
 });
 

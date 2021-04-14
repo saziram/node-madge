@@ -2,7 +2,7 @@ const madge = require('./../../../lib/api')('./test');
 
 const express = require('express'),
 router = express.Router();
-
+const timestamp = new Date().getTime();
 //router.use('/graph', require('./graph'));
 
 router.get('/', function (req, res) {
@@ -62,7 +62,7 @@ router.get('/leaves', function (req, res) {
 });
 
 router.get('/createSVGImage', function (req, res) {
-	madge.then((res) => res.image('images/image.svg'))
+	madge.then((res) => res.image('images/image-'+ timestamp +'.svg'))
 	.then((writtenImagePath) => {
 		console.log('Image written to ' + writtenImagePath);
 	});

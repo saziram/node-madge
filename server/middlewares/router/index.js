@@ -1,71 +1,32 @@
-const madge = require('./../../../lib/api')('./test');
+const madge = require('./../../../lib/api');
+const targetDependencyPath = './test';
 
-const express = require('express'),
-router = express.Router();
-const timestamp = new Date().getTime();
-//router.use('/graph', require('./graph'));
+//set dependency target path to create madge object
+const madgeObj = madge(targetDependencyPath);
 
-router.get('/', function (req, res) {
-	madge.then((result) => {
-		console.log(result.obj());
-		res.json(result.obj());		
+//import router object to utilize restfull http methods to capture client service request
+const router = require('express').Router();
+
+//constants for restfull service endpoints
+const API_Routes = {
+	objectAPI: ['/', '/warnings', '/circular', '/circularGraph', '/depends', '/orphans', '/leaves'],
+	svgImage: '/generateGraph'
+}
+
+//routes for object reponses
+router.get(API_Routes.objectAPI, function (req, res) {
+	madgeObj.then((result) => {
+		const madgeFunc = req.path.substring(1) || "obj";
+		const respJSON = result[madgeFunc]();
+		res.json(respJSON);		
 	});
 });
 
-router.get('/warnings', function (req, res) {
-	madge.then((result) => {
-		console.log(result.warnings());
-		res.json(result.warnings());		
-	});
-});
-
-router.get('/circular', function (req, res) {
-	madge.then((result) => {
-		console.log(result.circular());
-		res.json(result.circular());		
-	});
-});
-
-router.get('/circular', function (req, res) {
-	madge.then((result) => {
-		console.log(result.circular());
-		res.json(result.circular());		
-	});
-});
-
-router.get('/circularGraph', function (req, res) {
-	madge.then((result) => {
-		console.log(result.circularGraph());
-		res.json(result.circularGraph());		
-	});
-});
-
-router.get('/depends', function (req, res) {
-	madge.then((result) => {
-		console.log(result.depends());
-		res.json(result.depends());		
-	});
-});
-
-router.get('/orphans', function (req, res) {
-	madge.then((result) => {
-		console.log(result.orphans());
-		res.json(result.orphans());		
-	});
-});
-
-router.get('/leaves', function (req, res) {
-	madge.then((result) => {
-		console.log(result.leaves());
-		res.json(result.leaves());		
-	});
-});
-
-router.get('/createSVGImage', function (req, res) {
-	madge.then((results) => results.image('images/image-'+ timestamp +'.svg'))
-	.then((writtenImagePath) => {
-		console.log('Image written to ' + writtenImagePath);
-		res.json({path: writtenImagePath});
+//routes for graph generation
+router.get(API_Routes.svgImage, function (req, res) {
+	madgeObj.then((res) => res.svg())
+	.then((output) => {
+		res.write(output.toString());
 	});
 });
 

@@ -37,7 +37,7 @@
     "generate:small": "bin/cli.js --image /tmp/simple.svg test/cjs/circular/a.js",
     "generate:madge": "bin/cli.js --image /tmp/madge.svg bin lib",
     "test:output": "./test/output.sh",
-	"start": "node server.js"
+    "start": "nodemon server.js"
   },
   "funding": {
     "type": "individual",
